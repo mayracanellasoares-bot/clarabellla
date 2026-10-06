@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#e95f91">
+<title>Clara Bellla | Acessórios Misteriosos</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+:root{--pink:#e95f91;--soft:#fff4f8;--ink:#2c1b24;--line:#f1d7e1;--gold:#b8843a}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:var(--ink);background:#fff}
+header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:5}
+.wrap{width:min(1100px,calc(100% - 24px));margin:auto}.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
+.brand{font:700 28px Georgia,serif}.hero{padding:56px 0;background:linear-gradient(135deg,#fff7fa,#ffe5ef)}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}
+h1{font:700 clamp(42px,7vw,72px)/1 Georgia,serif;margin:0 0 18px}.hero p{font-size:18px;line-height:1.6;color:#705764}
+.card{background:#fff;border:1px solid var(--line);border-radius:28px;padding:28px;box-shadow:0 12px 30px #00000010}
+.btn{border:0;border-radius:999px;padding:13px 18px;font-weight:700;cursor:pointer}.primary{background:var(--ink);color:#fff}.pink{background:var(--pink);color:#fff}
+.bonus{margin:28px auto;padding:18px;border-radius:20px;background:#fff7f0;border:1px solid #f2d7c7}.progress{height:8px;background:#f3dce5;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--gold));width:0}
+section{padding:36px 0}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.product{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#fff}
+.pic{aspect-ratio:1;display:grid;place-items:center;font-size:64px;background:linear-gradient(145deg,#ffe9f1,#fff)}
+.body{padding:16px}.body h3{margin:0 0 8px}.body p{min-height:60px;color:#705764}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.price{font-weight:800;font-size:22px}footer{background:var(--ink);color:#fff;padding:36px 0;margin-top:30px}
+.cart{position:fixed;right:18px;bottom:18px;background:var(--pink);color:white;border:0;border-radius:999px;padding:14px 18px;font-weight:700}
+@media(max-width:800px){.hero-grid,.grid{grid-template-columns:1fr 1fr}}@media(max-width:540px){.hero-grid,.grid{grid-template-columns:1fr}.hero{padding:38px 0}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><div class="brand">Clara Bellla ♡</div><button class="btn primary" onclick="checkout()">Carrinho (<span id="count">0</span>)</button></div></header>
+<main>
+<section class="hero"><div class="wrap hero-grid">
+<div><small>ACESSÓRIOS • PAPELARIA • PRESENTES</small><h1>Um pouco de mistério.<br>Muito encanto.</h1>
+<p>Caixinhas, acessórios e papelaria para presentear e se surpreender.</p><button class="btn primary" onclick="document.getElementById('produtos').scrollIntoView()">Ver produtos</button></div>
+<div class="card"><div style="font-size:72px">🎁</div><h2>Caixinha Misteriosa</h2><p>Você escolhe a categoria e a quantidade. O modelo exato continua sendo surpresa.</p></div>
+</div></section>
+
+<div class="wrap bonus">
+<strong id="bonusTitle">Na compra acima de R$ 100,00, ganhe um Saquinho Misterioso.</strong>
+<p id="bonusText">Adicione produtos ao carrinho para liberar o mimo.</p>
+<div class="progress"><i id="progress"></i></div>
+</div>
+
+<section id="produtos"><div class="wrap">
+<h2 style="font:700 38px Georgia,serif">Escolha sua surpresa</h2>
+<div class="grid" id="grid"></div>
+</div></section>
+</main>
+
+<footer><div class="wrap"><div class="brand">Clara Bellla</div><p>Acessórios misteriosos, papelaria, presentes e muito mais.</p><p>Instagram • WhatsApp • Telegram</p></div></footer>
+<button class="cart" onclick="checkout()">💬 Finalizar pelo WhatsApp</button>
+
+<script>
+const products=[
+['Caixinha Mini Surpresa',34.90,'🎁','4 produtos misteriosos'],
+['Caixinha Super Surpresa',64.90,'🎀','8 produtos misteriosos'],
+['Presilhas Misteriosas',19.90,'🎀','Laços, estrelas e modelos delicados'],
+['Presilhas Rock',24.90,'⭐','Modelos preto, pink e rock'],
+['Acessórios de Cabelo',29.90,'💗','Mix de presilhas e acessórios'],
+['Chaveiro Misterioso',24.90,'🧸','Chaveiro grande e fofo'],
+['Pulseira Misteriosa',29.90,'📿','Pulseira surpresa'],
+['Papelaria Misteriosa',39.90,'✏️','Canetas, adesivos e bloquinhos'],
+['Kit Presente Professores',49.90,'📚','Kit especial para presentear']
+].map((p,i)=>({id:i+1,name:p[0],price:p[1],emoji:p[2],desc:p[3]}));
+let cart=JSON.parse(localStorage.getItem('claraCart')||'[]');
+const money=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+function render(){grid.innerHTML=products.map(p=>`<article class="product"><div class="pic">${p.emoji}</div><div class="body"><h3>${p.name}</h3><p>${p.desc}</p><div class="row"><span class="price">${money(p.price)}</span><button class="btn pink" onclick="add(${p.id})">Adicionar</button></div></div></article>`).join('');update()}
+function add(id){const x=cart.find(i=>i.id===id);x?x.qty++:cart.push({id,qty:1});localStorage.setItem('claraCart',JSON.stringify(cart));update()}
+function total(){return cart.reduce((s,i)=>s+products.find(p=>p.id===i.id).price*i.qty,0)}
+function update(){count.textContent=cart.reduce((s,i)=>s+i.qty,0);const t=total();progress.style.width=Math.min(100,t)+'%';if(t>=100){bonusTitle.textContent='🎉 Você ganhou um Saquinho Misterioso!';bonusText.textContent='Seu pedido já atingiu o valor da promoção.'}else{bonusTitle.textContent='Na compra acima de R$ 100,00, ganhe um Saquinho Misterioso.';bonusText.textContent='Faltam '+money(100-t)+' para liberar o mimo.'}}
+function checkout(){if(!cart.length)return alert('Seu carrinho está vazio.');alert('Pronto para integrar ao WhatsApp Business. Falta apenas o número comercial da Clara Bellla.')}
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+render();
+</script>
+</body></html>
