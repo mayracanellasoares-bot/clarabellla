@@ -1,10 +1,11 @@
 {
-  "name": "Clara Bellla",
+  "name": "Clara Bellla — Acessórios Misteriosos",
   "short_name": "Clara Bellla",
+  "description": "Caixinhas misteriosas, acessórios, papelaria e presentes.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#fff4f8",
-  "theme_color": "#e95f91",
+  "background_color": "#fffaf7",
+  "theme_color": "#d94f7f",
   "icons": [
     {
       "src": "icon.svg",
