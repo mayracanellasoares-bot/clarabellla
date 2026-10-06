@@ -47,7 +47,7 @@ section{padding:36px 0}.grid{display:grid;grid-template-columns:repeat(4,1fr);ga
 </div></section>
 </main>
 
-<footer><div class="wrap"><div class="brand">Clara Bellla</div><p>Acessórios misteriosos, papelaria, presentes e muito mais.</p><p>Instagram • WhatsApp • Telegram</p></div></footer>
+<footer><div class="wrap"><div class="brand">Clara Bellla</div><p>Acessórios misteriosos, papelaria, presentes e muito mais.</p><p>WhatsApp: (11) 99703-4894 • Instagram • Telegram</p></div></footer>
 <button class="cart" onclick="checkout()">💬 Finalizar pelo WhatsApp</button>
 
 <script>
@@ -63,12 +63,26 @@ const products=[
 ['Kit Presente Professores',49.90,'📚','Kit especial para presentear']
 ].map((p,i)=>({id:i+1,name:p[0],price:p[1],emoji:p[2],desc:p[3]}));
 let cart=JSON.parse(localStorage.getItem('claraCart')||'[]');
-const money=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const money=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});\nconst WHATSAPP='5511997034894';
 function render(){grid.innerHTML=products.map(p=>`<article class="product"><div class="pic">${p.emoji}</div><div class="body"><h3>${p.name}</h3><p>${p.desc}</p><div class="row"><span class="price">${money(p.price)}</span><button class="btn pink" onclick="add(${p.id})">Adicionar</button></div></div></article>`).join('');update()}
 function add(id){const x=cart.find(i=>i.id===id);x?x.qty++:cart.push({id,qty:1});localStorage.setItem('claraCart',JSON.stringify(cart));update()}
 function total(){return cart.reduce((s,i)=>s+products.find(p=>p.id===i.id).price*i.qty,0)}
 function update(){count.textContent=cart.reduce((s,i)=>s+i.qty,0);const t=total();progress.style.width=Math.min(100,t)+'%';if(t>=100){bonusTitle.textContent='🎉 Você ganhou um Saquinho Misterioso!';bonusText.textContent='Seu pedido já atingiu o valor da promoção.'}else{bonusTitle.textContent='Na compra acima de R$ 100,00, ganhe um Saquinho Misterioso.';bonusText.textContent='Faltam '+money(100-t)+' para liberar o mimo.'}}
-function checkout(){if(!cart.length)return alert('Seu carrinho está vazio.');alert('Pronto para integrar ao WhatsApp Business. Falta apenas o número comercial da Clara Bellla.')}
+function checkout(){
+  if(!cart.length)return alert('Seu carrinho está vazio.');
+  const t=total();
+  const linhas=['Olá! Quero fazer um pedido na Clara Bellla 💗','','Meu carrinho:'];
+  cart.forEach(i=>{
+    const p=products.find(x=>x.id===i.id);
+    linhas.push('• '+i.qty+'x '+p.name+' — '+money(p.price*i.qty));
+  });
+  linhas.push('');
+  linhas.push('Total: '+money(t));
+  if(t>=100)linhas.push('🎁 Ganhei o Saquinho Misterioso na promoção acima de R$ 100,00.');
+  linhas.push('');
+  linhas.push('Pode me confirmar disponibilidade, forma de pagamento e entrega?');
+  window.open('https://wa.me/'+WHATSAPP+'?text='+encodeURIComponent(linhas.join('\n')),'_blank','noopener,noreferrer');
+}
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 render();
 </script>
