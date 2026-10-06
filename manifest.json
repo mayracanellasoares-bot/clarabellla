@@ -1,0 +1,16 @@
+{
+  "name": "Clara Bellla",
+  "short_name": "Clara Bellla",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fff4f8",
+  "theme_color": "#e95f91",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
